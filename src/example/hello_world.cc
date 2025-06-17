@@ -9,5 +9,5 @@ print_hello_world()
     std::cout << spinarak::globals::name << "\n";
 }
 
-} // namespace globals
+} // namespace example
 } // namespace spinarak

@@ -7,8 +7,7 @@
 namespace spinarak {
 namespace example {
 
-void
-print_hello_world();
+void print_hello_world();
 
-} // namespace globals
+} // namespace example
 } // namespace spinarak
