@@ -1,8 +1,10 @@
-#include <memory/memory.hpp>
+#include <cli/cli.hpp>
+#include <emulator/emulator.hpp>
 
-int
-main()
+auto
+main(int argc, char** argv) -> int
 {
-    spinarak::memory::Memory("../roms/dmg_boot.bin", "../roms/hello.gb");
+    auto cli = spinarak::cli::CLI(argc, argv); // TODO: make singleton
+    auto emulator = spinarak::emulator::Emulator(cli.get_file_names());
     return 0;
 }

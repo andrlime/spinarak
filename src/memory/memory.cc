@@ -6,8 +6,10 @@
 namespace spinarak {
 namespace memory {
 
-Memory::Memory(std::string bios, std::string rom)
+Memory::Memory(std::pair<std::string, std::string> filenames)
 {
+    auto [bios, rom] = filenames;
+
     std::memset(&cpu_contents_, 0, sizeof(cpu_contents_));
 
     std::vector<byte_t> bios_buffer(0x100);
@@ -21,12 +23,12 @@ Memory::Memory(std::string bios, std::string rom)
     std::memcpy(cpu_contents_.rom_bank_01_nn, rom_buffer.data() + 0x4000, 0x4000);
 }
 
-void
-Memory::read_file(std::vector<byte_t>& buffer, std::string path)
+auto
+Memory::read_file(std::vector<byte_t>& buffer, std::string path) -> void
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file) {
-        throw std::runtime_error("failed to open ROM " + path);
+        throw std::runtime_error("failed to open file " + path);
     }
 
     std::streamsize size = file.tellg();
@@ -34,19 +36,12 @@ Memory::read_file(std::vector<byte_t>& buffer, std::string path)
 
     buffer.resize(size);
     if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
-        throw std::runtime_error("failed to read ROM to buffer");
+        throw std::runtime_error("failed to read file to buffer " + path);
     }
 }
 
-inline uint8_t
-Memory::get_wram_bank()
-{
-    uint8_t bank = read(0xFF70) & 0x07;
-    return (bank == 0) ? 0 : (bank - 1);
-}
-
-uint8_t
-Memory::read(uint16_t address)
+auto
+Memory::read(uint16_t address) -> uint8_t
 {
     if (address < 0x4000) {
         if (address < 0x100 && bios_active) {
@@ -89,8 +84,8 @@ Memory::read(uint16_t address)
     return cpu_contents_.ie;
 }
 
-void
-Memory::write(uint16_t address, uint8_t value)
+auto
+Memory::write(uint16_t address, uint8_t value) -> void
 {
     if (address < 0x8000) {
         throw std::runtime_error("invalid attempt to write to ROM address");

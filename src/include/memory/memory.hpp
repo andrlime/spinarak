@@ -38,14 +38,21 @@ private:
     memory_t cpu_contents_;
     bool bios_active = true;
 public:
-    Memory(std::string bios, std::string rom);
+    Memory(std::pair<std::string, std::string> filenames);
 
-    void read_file(std::vector<byte_t> &buffer, std::string path);
+    auto read_file(std::vector<byte_t> &buffer, std::string path) -> void;
 
-    inline uint8_t get_wram_bank();
+    auto read(uint16_t address) -> uint8_t;
+    auto write(uint16_t address, uint8_t value) -> void;
 
-    uint8_t read(uint16_t address);
-    void write(uint16_t address, uint8_t value);
+    inline auto get_wram_bank() -> uint8_t {
+        uint8_t bank = read(0xFF70) & 0x07;
+        return (bank == 0) ? 0 : (bank - 1);
+    }
+
+    inline static auto factory(std::pair<std::string, std::string> filenames) -> std::unique_ptr<Memory> {
+        return std::make_unique<Memory>(filenames);
+    }
 };
 
 } // namespace memory

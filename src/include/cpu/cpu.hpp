@@ -3,10 +3,10 @@
 #include <globals.hpp>
 #include <types.hpp>
 
+#include <cpu/register.hpp>
+
 namespace spinarak {
 namespace cpu {
-
-using spinarak::globals;
 
 union flags_t {
     struct {
@@ -56,10 +56,10 @@ class CPU {
 private:
     cpu_t cpu_contents_;
 public:
-    CPU() {
-    }
-    ~CPU() {
-    }
+    CPU();
+
+    auto write_register(spinarak::cpu::Register reg, byte_t value) -> void;
+    auto read_register(spinarak::cpu::Register reg) -> byte_t;
 };
 
 } // namespace example
