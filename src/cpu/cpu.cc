@@ -3,9 +3,7 @@
 namespace spinarak {
 namespace cpu {
 
-CPU::CPU() {
+CPU::CPU() {}
 
-}
-
-} // namespace example
+} // namespace cpu
 } // namespace spinarak
