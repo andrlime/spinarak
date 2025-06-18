@@ -1,8 +1,8 @@
-#include <example/hello_world.h>
+#include <memory/memory.hpp>
 
 int
 main()
 {
-    spinarak::example::print_hello_world();
+    spinarak::memory::Memory("../roms/dmg_boot.bin", "../roms/hello.gb");
     return 0;
 }
