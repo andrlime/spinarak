@@ -2,6 +2,7 @@
 
 #include <cpu/register.hpp>
 #include <globals.hpp>
+#include <memory/memory.hpp>
 #include <types.hpp>
 
 #include <memory>
@@ -9,13 +10,15 @@
 namespace spinarak {
 namespace cpu {
 
+using spinarak::memory::Memory;
+
 union flags_t {
     struct {
-        byte_t unused : 4; // bits 0–3
-        byte_t c : 1;      // bit 4
-        byte_t h : 1;      // bit 5
-        byte_t n : 1;      // bit 6
-        byte_t z : 1;      // bit 7
+        byte_t unused : 4;
+        byte_t c : 1;
+        byte_t h : 1;
+        byte_t n : 1;
+        byte_t z : 1;
     };
 
     byte_t f;
@@ -64,10 +67,15 @@ struct cpu_t {
 
 class CPU {
 private:
+    uint64_t cycles_ = 0;
     cpu_t cpu_contents_;
+    Memory* memory_;
 
 public:
-    CPU() { memset(&cpu_contents_, 0, sizeof(cpu_contents_)); }
+    CPU(Memory* memory) : memory_(memory)
+    {
+        memset(&cpu_contents_, 0, sizeof(cpu_contents_));
+    }
 
     template <Register R>
     inline auto write_register(byte_t value) -> void;
@@ -76,10 +84,17 @@ public:
     inline auto read_register() -> byte_t;
 
     inline static auto
-    factory() -> std::unique_ptr<CPU>
+    factory(Memory* memory) -> std::unique_ptr<CPU>
     {
-        return std::make_unique<CPU>();
+        return std::make_unique<CPU>(memory);
     }
+
+    auto no_op() -> void;
+    auto stop() -> void;
+
+    auto decode_and_execute(byte_t opcode) -> void;
+
+    auto tick() -> void;
 };
 
 } // namespace cpu

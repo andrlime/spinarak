@@ -103,5 +103,28 @@ CPU::read_register() -> byte_t
     throw std::runtime_error("attempted to read from unknown register");
 }
 
+auto
+CPU::decode_and_execute(byte_t opcode) -> void
+{
+    DEBUG("running opcode 0x%x\n", opcode);
+    switch (opcode) {
+        case 0x00:
+            no_op();
+            break;
+        case 0x10:
+            stop();
+            break;
+        default:
+            throw std::runtime_error("unimplemented opcode");
+    }
+}
+
+auto
+CPU::tick() -> void
+{
+    byte_t opcode = memory_->read(cpu_contents_.pc++);
+    decode_and_execute(opcode);
+}
+
 } // namespace cpu
 } // namespace spinarak

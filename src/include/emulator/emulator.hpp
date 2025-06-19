@@ -17,8 +17,17 @@ private:
     std::unique_ptr<Memory> memory_;
 
 public:
-    inline Emulator(std::pair<std::string, std::string> filenames) :
-        cpu_(CPU::factory()), memory_(Memory::factory(filenames)) {};
+    inline Emulator(std::pair<std::string, std::string> filenames)
+    {
+        memory_ = Memory::factory(filenames);
+        cpu_ = CPU::factory(memory_.get());
+    }
+
+    inline void
+    run()
+    {
+        cpu_->tick();
+    }
 };
 
 } // namespace emulator

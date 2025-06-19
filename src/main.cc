@@ -15,7 +15,7 @@ main(int argc, char** argv) -> int
     app_init(argc, argv);
     auto emulator = spinarak::emulator::Emulator(CLI::get_instance()->get_file_names());
 
-    // Go instruction by instruction
+    emulator.run();
 
     // TODO: draw stuff
     // TODO: timer
