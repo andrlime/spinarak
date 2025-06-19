@@ -70,10 +70,10 @@ public:
     CPU() { memset(&cpu_contents_, 0, sizeof(cpu_contents_)); }
 
     template <Register R>
-    auto write_register(byte_t value) -> void;
+    inline auto write_register(byte_t value) -> void;
 
     template <Register R>
-    auto read_register() -> byte_t;
+    inline auto read_register() -> byte_t;
 
     inline static auto
     factory() -> std::unique_ptr<CPU>

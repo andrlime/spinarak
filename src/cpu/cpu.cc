@@ -4,7 +4,7 @@ namespace spinarak {
 namespace cpu {
 
 template <Register R>
-auto
+inline auto
 CPU::write_register(byte_t value) -> void
 {
     if constexpr (R == Register::A) {
@@ -54,7 +54,7 @@ CPU::write_register(byte_t value) -> void
 }
 
 template <Register R>
-auto
+inline auto
 CPU::read_register() -> byte_t
 {
     if constexpr (R == Register::A) {
