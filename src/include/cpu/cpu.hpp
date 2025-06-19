@@ -71,6 +71,17 @@ private:
     cpu_t cpu_contents_;
     Memory* memory_;
 
+    // ld register lookup table
+    // horizontal order:
+    //      B, C, D, E, H, L AtHL, A
+    // vertical order:
+    //      B D H AtHL for x0-x7
+    //      C E L A for x8-xF
+    static constexpr std::array<AllRegisters, 8> reg_lookup = {
+        Register::B, Register::C, Register::D,      Register::E,
+        Register::H, Register::L, AtRegister::AtHL, Register::A
+    };
+
 public:
     CPU(Memory* memory) : memory_(memory)
     {
@@ -89,12 +100,32 @@ public:
         return std::make_unique<CPU>(memory);
     }
 
-    auto no_op() -> void;
-    auto stop() -> void;
-
     auto decode_and_execute(byte_t opcode) -> void;
-
     auto tick() -> void;
+
+    // Instructions boilerplate starts here
+    auto no_op() -> void;
+
+    template <Register dest, Register src>
+    auto ld() -> void;
+
+    template <Register dest, AtRegister src>
+    auto ld() -> void;
+
+    template <AtRegister dest, Register src>
+    auto ld() -> void;
+
+    template <Register dest>
+    auto ld(byte_t src) -> void;
+
+    template <Register dest>
+    auto ld(word_t src) -> void;
+
+    template <Register src, WriteDirection direc>
+    auto ld(byte_t dest) -> void;
+
+    template <Register src, WriteDirection direc>
+    auto ld(word_t dest) -> void;
 };
 
 } // namespace cpu

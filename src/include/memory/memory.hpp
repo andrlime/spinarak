@@ -43,13 +43,13 @@ public:
 
     auto read_file(std::vector<byte_t>& buffer, std::string path) -> void;
 
-    auto read(uint16_t address) -> uint8_t;
-    auto write(uint16_t address, uint8_t value) -> void;
+    auto read(word_t address) -> byte_t;
+    auto write(word_t address, byte_t value) -> void;
 
     inline auto
-    get_wram_bank() -> uint8_t
+    get_wram_bank() -> byte_t
     {
-        uint8_t bank = read(0xFF70) & 0x07;
+        byte_t bank = read(0xFF70) & 0x07;
         return (bank == 0) ? 0 : (bank - 1);
     }
 

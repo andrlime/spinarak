@@ -111,9 +111,6 @@ CPU::decode_and_execute(byte_t opcode) -> void
         case 0x00:
             no_op();
             break;
-        case 0x10:
-            stop();
-            break;
         default:
             throw std::runtime_error("unimplemented opcode");
     }

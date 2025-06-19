@@ -1,5 +1,6 @@
 #include <cpu/cpu.hpp>
 
+// CPU: nop
 namespace spinarak {
 namespace cpu {
 
@@ -8,15 +9,6 @@ CPU::no_op() -> void
 {
     DEBUG("entering NO-OP call\n");
     cycles_ += 4;
-}
-
-auto
-CPU::stop() -> void
-{
-    DEBUG("entering STOP call\n");
-    cycles_ += 4;
-
-    // TODO
 }
 
 } // namespace cpu
