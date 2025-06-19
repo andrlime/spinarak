@@ -25,10 +25,7 @@ enum class AtRegister : byte_t {
     AtSP,
     AtPC
 };
-enum class WriteDirection : byte_t {
-    SrcToDest,
-    DestToSrc
-};
+enum class WriteDirection : byte_t { SrcToDest, DestToSrc };
 
 using AllRegisters = std::variant<Register, AtRegister>;
 

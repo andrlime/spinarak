@@ -41,8 +41,12 @@ CPU::ld(word_t src) -> void
 {
     // this template is only used in 16 bit word registers
     // type check for sanity
-    if constexpr (dest != Register::AF && dest != Register::BC && dest != Register::DE && dest != Register::HL && dest != Register::SP && dest != Register::PC) {
-        throw std::runtime_error("attempted to write a 16 bit word into a non 16 bit register");
+    if constexpr (dest != Register::AF && dest != Register::BC && dest != Register::DE
+                  && dest != Register::HL && dest != Register::SP
+                  && dest != Register::PC) {
+        throw std::runtime_error(
+            "attempted to write a 16 bit word into a non 16 bit register"
+        );
     }
 
     write_register<dest>(src);
@@ -57,7 +61,8 @@ CPU::ld(byte_t dest) -> void
     cycles_ += 12;
     if constexpr (direc == WriteDirection::DestToSrc) {
         write_register<src>(memory_->read(0xFF00 + dest));
-    } else { // WriteDirection::SrcToDest
+    }
+    else { // WriteDirection::SrcToDest
         memory_->write(0xFF00 + dest, read_register<src>());
     }
 }
@@ -69,7 +74,8 @@ CPU::ld(word_t dest) -> void
     cycles_ += 16;
     if constexpr (direc == WriteDirection::DestToSrc) {
         write_register<src>(memory_->read(dest));
-    } else { // WriteDirection::SrcToDest
+    }
+    else { // WriteDirection::SrcToDest
         memory_->write(dest, read_register<src>());
     }
 }

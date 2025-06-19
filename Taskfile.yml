@@ -5,15 +5,42 @@ version: '3'
 tasks:
   init-cmake:
     cmds:
-      - mkdir build
+      - mkdir -p build
       - cd build && cmake ..
+    aliases:
+      - icm
+  init-conan:
+    cmds:
+      - mkdir -p build
+      - conan install . -s build_type=Debug -b missing --profile ~/.conan2/profiles/cpp26
+    aliases:
+      - icn
+  init:
+    cmds:
+      - rm -r build
+      - task: init-conan
+      - task: init-cmake
+    aliases:
+      - i
   build:
     dir: "./build"
     cmds:
       - make
+    aliases:
+      - b
+  utest:
+    dir: "./build"
+    cmds:
+      - ./tests
+    aliases:
+      - ut
   lint:
     cmds:
       - clang-format --dry-run --Werror --style=file $(find src/ -name '*.cc' -o -name '*.hpp')
+    aliases:
+      - l
   format:
     cmds:
       - clang-format -i --style=file $(find src/ -name '*.cc' -o -name '*.hpp')
+    aliases:
+      - f

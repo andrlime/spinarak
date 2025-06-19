@@ -1,0 +1,31 @@
+{
+    "version": 4,
+    "configurePresets": [
+      {
+        "name": "dev",
+        "binaryDir": "${sourceDir}/build/dev",
+        "inherits": ["dev-mode", "conan", "ci-ubuntu"],
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+      }
+    ],
+    "buildPresets": [
+      {
+        "name": "dev",
+        "configurePreset": "dev",
+        "configuration": "Debug"
+      }
+    ],
+    "testPresets": [
+      {
+        "name": "dev",
+        "configurePreset": "dev",
+        "configuration": "Debug",
+        "output": {
+          "outputOnFailure": true
+        }
+      }
+    ]
+  }
