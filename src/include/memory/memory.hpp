@@ -35,10 +35,11 @@ struct memory_t {
 
 class Memory {
 private:
-    memory_t cpu_contents_;
+    memory_t memory_contents_;
     bool bios_active = true;
 
 public:
+    Memory();
     Memory(std::pair<std::string, std::string> filenames);
 
     auto read_file(std::vector<byte_t>& buffer, std::string path) -> void;
@@ -47,10 +48,22 @@ public:
     auto write(word_t address, byte_t value) -> void;
 
     inline auto
+    get_memory_pointer() -> memory_t*
+    {
+        return &memory_contents_;
+    }
+
+    inline auto
     get_wram_bank() -> byte_t
     {
         byte_t bank = read(0xFF70) & 0x07;
         return (bank == 0) ? 0 : (bank - 1);
+    }
+
+    inline static auto
+    factory() -> std::unique_ptr<Memory>
+    {
+        return std::make_unique<Memory>();
     }
 
     inline static auto

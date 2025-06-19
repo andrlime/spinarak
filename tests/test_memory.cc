@@ -1,0 +1,58 @@
+#include <gtest/gtest.h>
+#include <memory/memory.hpp>
+
+using spinarak::memory::Memory;
+
+TEST(MemoryTest, CanCreateBlankMemory) {
+    ASSERT_NO_THROW({
+        auto memory = std::make_unique<Memory>();
+    });
+}
+
+TEST(MemoryTest, CanReadMemory) {
+    auto memory = Memory::factory();
+    auto memory_pointer = memory->get_memory_pointer();
+
+    for (size_t addr = 0; addr < 0x100; addr ++) {
+        memory_pointer->bios[addr] = addr;
+    }
+    for (size_t addr = 0; addr < 0x100; addr ++) {
+        ASSERT_EQ(memory->read(addr), addr);
+    }
+
+    for (size_t addr = 0; addr < 0x100; addr ++) {
+        memory_pointer->bios[addr] = addr;
+    }
+    for (size_t addr = 0; addr < 0x100; addr ++) {
+        ASSERT_EQ(memory->read(addr), addr);
+    }
+}
+
+TEST(MemoryTest, CanWriteMemory) {
+    auto memory = Memory::factory();
+
+    for (size_t addr = 0x8000; addr <= 0xFFFF; addr ++) {
+        memory->write(addr, addr & 0xFF);
+    }
+    for (size_t addr = 0x8000; addr <= 0xFFFF; addr ++) {
+        auto fetched = memory->read(addr);
+        ASSERT_EQ(fetched, addr & 0xFF);
+    }
+}
+
+TEST(MemoryTest, FailsOnWriteToRom) {
+    auto memory = Memory::factory();
+    EXPECT_THROW(memory->write(0x0000, 0x12), std::runtime_error);
+}
+
+TEST(MemoryTest, DisablesBiosSuccessfully) {
+    auto memory = Memory::factory();
+    auto memory_pointer = memory->get_memory_pointer();
+
+    memory_pointer->bios[0] = 0x12;
+    memory_pointer->rom_bank_00[0] = 0x34;
+    ASSERT_EQ(memory->read(0x00), 0x12);
+
+    memory->write(0xFF50, 0x01);
+    ASSERT_EQ(memory->read(0x00), 0x34);
+}

@@ -94,6 +94,12 @@ public:
     template <Register R>
     inline auto read_register() -> byte_t;
 
+    inline auto
+    get_cycles() -> uint64_t
+    {
+        return cycles_;
+    }
+
     inline static auto
     factory(Memory* memory) -> std::unique_ptr<CPU>
     {

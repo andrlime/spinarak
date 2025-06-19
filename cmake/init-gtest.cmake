@@ -6,6 +6,9 @@ add_executable(tests
 target_link_libraries(tests
 	GTest::gtest
 	GTest::gtest_main
+	SPINARAK_obj
 )
 include(GoogleTest)
 gtest_discover_tests(tests)
+
+target_include_directories(tests PRIVATE "./src/include")

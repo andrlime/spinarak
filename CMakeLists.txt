@@ -16,5 +16,5 @@ if(APPLE)
     include("cmake/macos-hotfix.cmake")
 endif()
 
-include("cmake/init-gtest.cmake")
 include("cmake/init-spinarak.cmake")
+include("cmake/init-gtest.cmake")
