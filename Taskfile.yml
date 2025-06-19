@@ -11,11 +11,6 @@ tasks:
     dir: "./build"
     cmds:
       - make
-  run:
-    dir: "./build"
-    cmds:
-      - task: build
-      - ./sealeo
   lint:
     cmds:
       - clang-format --dry-run --Werror --style=file $(find src/ -name '*.cc' -o -name '*.hpp')
