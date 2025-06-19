@@ -18,8 +18,7 @@ private:
 
 public:
     inline Emulator(std::pair<std::string, std::string> filenames) :
-        // cpu_(spinarak::cpu::factory()),
-        memory_(Memory::factory(filenames)) {};
+        cpu_(CPU::factory()), memory_(Memory::factory(filenames)) {};
 };
 
 } // namespace emulator

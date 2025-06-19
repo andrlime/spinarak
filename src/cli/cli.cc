@@ -5,6 +5,8 @@ namespace cli {
 
 #define seq(s1, s2) strcmp((s1), (s2)) == 0
 
+CLI* spinarak::cli::CLI::instance_ = nullptr;
+
 CLI::CLI(int argc, char** argv)
 {
     if (argc == 2 && (seq(argv[1], "--help") || seq(argv[1], "-h"))) {
@@ -18,6 +20,8 @@ CLI::CLI(int argc, char** argv)
 
     bios_file_name_ = argv[1];
     rom_file_name_ = argv[2];
+
+    instance_ = this;
 }
 
 void

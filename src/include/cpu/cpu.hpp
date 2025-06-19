@@ -4,6 +4,8 @@
 #include <globals.hpp>
 #include <types.hpp>
 
+#include <memory>
+
 namespace spinarak {
 namespace cpu {
 
@@ -65,10 +67,19 @@ private:
     cpu_t cpu_contents_;
 
 public:
-    CPU();
+    CPU() { memset(&cpu_contents_, 0, sizeof(cpu_contents_)); }
 
-    auto write_register(spinarak::cpu::Register reg, byte_t value) -> void;
-    auto read_register(spinarak::cpu::Register reg) -> byte_t;
+    template <Register R>
+    auto write_register(byte_t value) -> void;
+
+    template <Register R>
+    auto read_register() -> byte_t;
+
+    inline static auto
+    factory() -> std::unique_ptr<CPU>
+    {
+        return std::make_unique<CPU>();
+    }
 };
 
 } // namespace cpu

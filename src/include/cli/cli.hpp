@@ -14,8 +14,20 @@ private:
     std::string bios_file_name_;
     std::string rom_file_name_;
 
+    static CLI* instance_;
+
 public:
     CLI(int argc, char** argv);
+
+    static inline auto
+    get_instance() -> CLI*
+    {
+        if (instance_ == nullptr) {
+            std::cerr << "CLI not initialized, cannot get_instance()" << "\n";
+            std::exit(1);
+        }
+        return instance_;
+    }
 
     auto print_usage() -> void;
 
