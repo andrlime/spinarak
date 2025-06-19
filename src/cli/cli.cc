@@ -10,13 +10,14 @@ CLI::CLI(int argc, char** argv)
     if (argc == 2 && (seq(argv[1], "--help") || seq(argv[1], "-h"))) {
         print_usage();
     }
-    else if (argc != 3) {
-        throw std::runtime_error("expected three arguments, run with --help for usage");
+
+    if (argc != 3) {
+        std::cout << "expected three arguments, run with --help for usage" << "\n";
+        exit(0);
     }
-    else {
-        bios_file_name_ = argv[1];
-        rom_file_name_ = argv[2];
-    }
+
+    bios_file_name_ = argv[1];
+    rom_file_name_ = argv[2];
 }
 
 void
@@ -28,7 +29,7 @@ CLI::print_usage()
     std::cout << "\t\trom_file_name:\tpath to the GameBoy ROM to run" << "\n";
     std::cout << "\tspinarak --help" << "\n";
     std::cout << "\t\tprints this help message" << "\n";
-    throw std::runtime_error("printed help message, stopping");
+    exit(0);
 }
 
 } // namespace cli

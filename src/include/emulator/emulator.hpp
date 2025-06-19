@@ -1,9 +1,8 @@
 #pragma once
 
 #include <cpu/cpu.hpp>
-#include <memory/memory.hpp>
-
 #include <globals.hpp>
+#include <memory/memory.hpp>
 #include <types.hpp>
 
 namespace spinarak {
@@ -16,12 +15,12 @@ class Emulator {
 private:
     std::unique_ptr<CPU> cpu_;
     std::unique_ptr<Memory> memory_;
+
 public:
     inline Emulator(std::pair<std::string, std::string> filenames) :
         // cpu_(spinarak::cpu::factory()),
-        memory_(Memory::factory(filenames))
-        {};
+        memory_(Memory::factory(filenames)) {};
 };
 
-} // namespace example
+} // namespace emulator
 } // namespace spinarak
