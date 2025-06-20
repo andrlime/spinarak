@@ -91,8 +91,11 @@ Memory::read(word_t address) -> uint8_t
 }
 
 auto
-Memory::write(word_t address, byte_t value) -> void
+Memory::write(word_t address, word_t value) -> void
 {
+    if (!!(value & 0xFF00)) {
+        throw std::runtime_error("attempted to write word with non-zero upper 8 bits");
+    }
     if (address < 0x8000) {
         throw std::runtime_error("invalid attempt to write to ROM address");
     }

@@ -45,7 +45,9 @@ public:
     auto read_file(std::vector<byte_t>& buffer, std::string path) -> void;
 
     auto read(word_t address) -> byte_t;
-    auto write(word_t address, byte_t value) -> void;
+
+    // Only writes bytes
+    auto write(word_t address, word_t value) -> void;
 
     inline auto
     get_memory_pointer() -> memory_t*

@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include <memory/memory.hpp>
+#include <types.hpp>
 
 using spinarak::memory::Memory;
 
-TEST(MemoryTest, CanCreateBlankMemory) {
+TEST(MemoryTest, Factory_CanCreateBlank) {
     ASSERT_NO_THROW({
         auto memory = std::make_unique<Memory>();
     });
 }
 
-TEST(MemoryTest, CanReadMemory) {
+TEST(MemoryTest, ReadMemory_Can) {
     auto memory = Memory::factory();
     auto memory_pointer = memory->get_memory_pointer();
 
@@ -28,7 +29,7 @@ TEST(MemoryTest, CanReadMemory) {
     }
 }
 
-TEST(MemoryTest, CanWriteMemory) {
+TEST(MemoryTest, WriteMemory_Can) {
     auto memory = Memory::factory();
 
     for (size_t addr = 0x8000; addr <= 0xFFFF; addr ++) {
@@ -40,9 +41,21 @@ TEST(MemoryTest, CanWriteMemory) {
     }
 }
 
+TEST(MemoryTest, WriteMemory_FailsOnNonByteInput) {
+    auto memory = Memory::factory();
+
+    ASSERT_THROW(memory->write(0x8000, 0x0100), std::runtime_error);
+    ASSERT_THROW(memory->write(0x8000, 0x0400), std::runtime_error);
+    ASSERT_THROW(memory->write(0x8000, 0x2000), std::runtime_error);
+    ASSERT_THROW(memory->write(0x8000, 0x4000), std::runtime_error);
+    ASSERT_THROW(memory->write(0x8000, 0x8000), std::runtime_error);
+    ASSERT_THROW(memory->write(0x8000, 0xF000), std::runtime_error);
+}
+
 TEST(MemoryTest, FailsOnWriteToRom) {
     auto memory = Memory::factory();
-    EXPECT_THROW(memory->write(0x0000, 0x12), std::runtime_error);
+    ASSERT_THROW(memory->write(0x0000, 0x12), std::runtime_error);
+    ASSERT_THROW(memory->write(0x1000, 0x12), std::runtime_error);
 }
 
 TEST(MemoryTest, DisablesBiosSuccessfully) {
