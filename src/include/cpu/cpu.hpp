@@ -4,6 +4,7 @@
 #include <globals.hpp>
 #include <memory/memory.hpp>
 #include <types.hpp>
+
 #include <memory>
 
 namespace spinarak {
@@ -244,5 +245,5 @@ public:
 } // namespace cpu
 } // namespace spinarak
 
-#include <cpu/instructions/no_op.hpp>
 #include <cpu/instructions/ld.hpp>
+#include <cpu/instructions/no_op.hpp>
