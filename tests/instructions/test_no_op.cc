@@ -5,7 +5,7 @@
 using spinarak::memory::Memory;
 using spinarak::cpu::CPU;
 
-TEST(InstructionsTest, NoOp) {
+TEST(NoOpInstructionTest, Basic) {
     auto memory_ = Memory::factory();
     auto cpu_ = CPU::factory(memory_.get());
 

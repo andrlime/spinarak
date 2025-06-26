@@ -1,4 +1,4 @@
-#include <cpu/cpu.hpp>
+#pragma once
 
 // CPU::ld dest, src
 namespace spinarak {
@@ -52,7 +52,7 @@ CPU::ld(word_t src) -> void
     write_register<dest>(src);
 }
 
-// because addresses are 16 bit, 8 bite addresses necessarily
+// because addresses are 16 bit, 8 bit addresses necessarily
 // corresponds to 0xFF00 + address
 template <Register src, WriteDirection direc>
 auto

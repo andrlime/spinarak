@@ -1,13 +1,12 @@
-#include <cpu/cpu.hpp>
+#pragma once
 
 // CPU: nop
 namespace spinarak {
 namespace cpu {
 
-auto
+inline auto
 CPU::no_op() -> void
 {
-    DEBUG("entering NO-OP call\n");
     cycles_ += 4;
 }
 
