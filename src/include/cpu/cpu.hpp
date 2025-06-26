@@ -230,10 +230,10 @@ public:
     auto ld() -> void;
 
     template <Register dest>
-    auto ld(byte_t src) -> void;
+    auto ld(byte_t src) -> void requires Is8BitRegister<dest>;
 
     template <Register dest>
-    auto ld(word_t src) -> void;
+    auto ld(word_t src) -> void requires Is16BitRegister<dest>;
 
     template <Register src, WriteDirection direc>
     auto ld(byte_t dest) -> void;

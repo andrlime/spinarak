@@ -30,25 +30,15 @@ CPU::ld() -> void
 
 template <Register dest>
 auto
-CPU::ld(byte_t src) -> void
+CPU::ld(byte_t src) -> void requires Is8BitRegister<dest>
 {
     write_register<dest>(src);
 }
 
 template <Register dest>
 auto
-CPU::ld(word_t src) -> void
+CPU::ld(word_t src) -> void requires Is16BitRegister<dest>
 {
-    // this template is only used in 16 bit word registers
-    // type check for sanity
-    if constexpr (dest != Register::AF && dest != Register::BC && dest != Register::DE
-                  && dest != Register::HL && dest != Register::SP
-                  && dest != Register::PC) {
-        throw std::runtime_error(
-            "attempted to write a 16 bit word into a non 16 bit register"
-        );
-    }
-
     write_register<dest>(src);
 }
 
