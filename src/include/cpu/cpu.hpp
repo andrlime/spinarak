@@ -31,7 +31,7 @@ struct cpu_t {
             byte_t a;
         };
 
-        uint16_t af;
+        word_t af;
     };
 
     union {
@@ -40,7 +40,7 @@ struct cpu_t {
             byte_t b;
         };
 
-        uint16_t bc;
+        word_t bc;
     };
 
     union {
@@ -49,7 +49,7 @@ struct cpu_t {
             byte_t d;
         };
 
-        uint16_t de;
+        word_t de;
     };
 
     union {
@@ -58,11 +58,11 @@ struct cpu_t {
             byte_t h;
         };
 
-        uint16_t hl;
+        word_t hl;
     };
 
-    uint16_t sp;
-    uint16_t pc;
+    word_t sp;
+    word_t pc;
 };
 
 class CPU {
@@ -90,50 +90,18 @@ public:
 
     template <Register R>
     inline auto
-    write_register(byte_t value) -> void
+    write_register(word_t value) -> void requires Is16BitRegister<R>
     {
-        if constexpr (R == Register::A) {
-            cpu_contents_.a = value;
-            return;
-        }
-        if constexpr (R == Register::F) {
-            cpu_contents_.f.f = value;
-            return;
-        }
         if constexpr (R == Register::AF) {
             cpu_contents_.af = value;
-            return;
-        }
-        if constexpr (R == Register::B) {
-            cpu_contents_.b = value;
-            return;
-        }
-        if constexpr (R == Register::C) {
-            cpu_contents_.c = value;
             return;
         }
         if constexpr (R == Register::BC) {
             cpu_contents_.bc = value;
             return;
         }
-        if constexpr (R == Register::D) {
-            cpu_contents_.d = value;
-            return;
-        }
-        if constexpr (R == Register::E) {
-            cpu_contents_.e = value;
-            return;
-        }
         if constexpr (R == Register::DE) {
             cpu_contents_.de = value;
-            return;
-        }
-        if constexpr (R == Register::H) {
-            cpu_contents_.h = value;
-            return;
-        }
-        if constexpr (R == Register::L) {
-            cpu_contents_.l = value;
             return;
         }
         if constexpr (R == Register::HL) {
@@ -154,40 +122,56 @@ public:
 
     template <Register R>
     inline auto
-    read_register() -> byte_t
+    write_register(byte_t value) -> void requires Is8BitRegister<R>
     {
         if constexpr (R == Register::A) {
-            return cpu_contents_.a;
+            cpu_contents_.a = value;
+            return;
         }
         if constexpr (R == Register::F) {
-            return cpu_contents_.f.f; // flags is a bitfield, need the full value
-        }
-        if constexpr (R == Register::AF) {
-            return cpu_contents_.af;
+            cpu_contents_.f.f = value;
+            return;
         }
         if constexpr (R == Register::B) {
-            return cpu_contents_.b;
+            cpu_contents_.b = value;
+            return;
         }
         if constexpr (R == Register::C) {
-            return cpu_contents_.c;
+            cpu_contents_.c = value;
+            return;
+        }
+        if constexpr (R == Register::D) {
+            cpu_contents_.d = value;
+            return;
+        }
+        if constexpr (R == Register::E) {
+            cpu_contents_.e = value;
+            return;
+        }
+        if constexpr (R == Register::H) {
+            cpu_contents_.h = value;
+            return;
+        }
+        if constexpr (R == Register::L) {
+            cpu_contents_.l = value;
+            return;
+        }
+
+        throw std::runtime_error("attempted to write to unknown register");
+    }
+
+    template <Register R>
+    inline auto
+    read_register() -> word_t requires Is16BitRegister<R>
+    {
+        if constexpr (R == Register::AF) {
+            return cpu_contents_.af;
         }
         if constexpr (R == Register::BC) {
             return cpu_contents_.bc;
         }
-        if constexpr (R == Register::D) {
-            return cpu_contents_.d;
-        }
-        if constexpr (R == Register::E) {
-            return cpu_contents_.e;
-        }
         if constexpr (R == Register::DE) {
             return cpu_contents_.de;
-        }
-        if constexpr (R == Register::H) {
-            return cpu_contents_.h;
-        }
-        if constexpr (R == Register::L) {
-            return cpu_contents_.l;
         }
         if constexpr (R == Register::HL) {
             return cpu_contents_.hl;
@@ -197,6 +181,64 @@ public:
         }
         if constexpr (R == Register::PC) {
             return cpu_contents_.pc;
+        }
+
+        throw std::runtime_error("attempted to read from unknown register");
+    }
+
+    template <AtRegister R>
+    inline auto
+    read_register() -> word_t requires Is16BitAtRegister<R>
+    {
+        if constexpr (R == AtRegister::AtAF) {
+            return cpu_contents_.af;
+        }
+        if constexpr (R == AtRegister::AtBC) {
+            return cpu_contents_.bc;
+        }
+        if constexpr (R == AtRegister::AtDE) {
+            return cpu_contents_.de;
+        }
+        if constexpr (R == AtRegister::AtHL) {
+            return cpu_contents_.hl;
+        }
+        if constexpr (R == AtRegister::AtSP) {
+            return cpu_contents_.sp;
+        }
+        if constexpr (R == AtRegister::AtPC) {
+            return cpu_contents_.pc;
+        }
+
+        throw std::runtime_error("attempted to read from unknown register");
+    }
+
+    template <Register R>
+    inline auto
+    read_register() -> byte_t requires Is8BitRegister<R>
+    {
+        if constexpr (R == Register::A) {
+            return cpu_contents_.a;
+        }
+        if constexpr (R == Register::F) {
+            return cpu_contents_.f.f; // flags is a bitfield, need the full value
+        }
+        if constexpr (R == Register::B) {
+            return cpu_contents_.b;
+        }
+        if constexpr (R == Register::C) {
+            return cpu_contents_.c;
+        }
+        if constexpr (R == Register::D) {
+            return cpu_contents_.d;
+        }
+        if constexpr (R == Register::E) {
+            return cpu_contents_.e;
+        }
+        if constexpr (R == Register::H) {
+            return cpu_contents_.h;
+        }
+        if constexpr (R == Register::L) {
+            return cpu_contents_.l;
         }
 
         throw std::runtime_error("attempted to read from unknown register");
@@ -224,10 +266,10 @@ public:
     auto ld() -> void;
 
     template <Register dest, AtRegister src>
-    auto ld() -> void;
+    auto ld() -> void requires Is16BitAtRegister<src>;
 
     template <AtRegister dest, Register src>
-    auto ld() -> void;
+    auto ld() -> void requires Is16BitAtRegister<dest>;
 
     template <Register dest>
     auto ld(byte_t src) -> void requires Is8BitRegister<dest>;

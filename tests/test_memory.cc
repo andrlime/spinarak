@@ -41,21 +41,33 @@ TEST(MemoryTest, WriteMemory_Can) {
     }
 }
 
+TEST(MemoryTest, ReadWriteMemory_16Bits) {
+    auto memory = Memory::factory();
+
+    for (size_t addr = 0x8000; addr < 0xE000; addr += 2) {
+        memory->write16(addr, addr);
+    }
+    for (size_t addr = 0x8000; addr < 0xE000; addr += 2) {
+        auto fetched = memory->read16(addr);
+        ASSERT_EQ(fetched, addr);
+    }
+}
+
 TEST(MemoryTest, WriteMemory_FailsOnNonByteInput) {
     auto memory = Memory::factory();
 
-    ASSERT_THROW(memory->write(0x8000, 0x0100), std::runtime_error);
-    ASSERT_THROW(memory->write(0x8000, 0x0400), std::runtime_error);
-    ASSERT_THROW(memory->write(0x8000, 0x2000), std::runtime_error);
-    ASSERT_THROW(memory->write(0x8000, 0x4000), std::runtime_error);
-    ASSERT_THROW(memory->write(0x8000, 0x8000), std::runtime_error);
-    ASSERT_THROW(memory->write(0x8000, 0xF000), std::runtime_error);
+    ASSERT_THROW(memory->write(0x8000, 0x0100), std::domain_error);
+    ASSERT_THROW(memory->write(0x8000, 0x0400), std::domain_error);
+    ASSERT_THROW(memory->write(0x8000, 0x2000), std::domain_error);
+    ASSERT_THROW(memory->write(0x8000, 0x4000), std::domain_error);
+    ASSERT_THROW(memory->write(0x8000, 0x8000), std::domain_error);
+    ASSERT_THROW(memory->write(0x8000, 0xF000), std::domain_error);
 }
 
 TEST(MemoryTest, FailsOnWriteToRom) {
     auto memory = Memory::factory();
-    ASSERT_THROW(memory->write(0x0000, 0x12), std::runtime_error);
-    ASSERT_THROW(memory->write(0x1000, 0x12), std::runtime_error);
+    ASSERT_THROW(memory->write(0x0000, 0x12), std::domain_error);
+    ASSERT_THROW(memory->write(0x1000, 0x12), std::domain_error);
 }
 
 TEST(MemoryTest, DisablesBiosSuccessfully) {

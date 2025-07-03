@@ -37,6 +37,11 @@ concept Is16BitRegister =
     R == Register::AF || R == Register::BC || R == Register::DE ||
     R == Register::HL || R == Register::SP || R == Register::PC;
 
+template <AtRegister R>
+concept Is16BitAtRegister =
+    R == AtRegister::AtAF || R == AtRegister::AtBC || R == AtRegister::AtDE ||
+    R == AtRegister::AtHL || R == AtRegister::AtSP || R == AtRegister::AtPC;
+
 using AllRegisters = std::variant<Register, AtRegister>;
 
 } // namespace cpu

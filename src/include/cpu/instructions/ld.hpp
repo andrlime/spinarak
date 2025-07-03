@@ -14,7 +14,7 @@ CPU::ld() -> void
 
 template <Register dest, AtRegister src>
 auto
-CPU::ld() -> void
+CPU::ld() -> void requires Is16BitAtRegister<src>
 {
     cycles_ += 8;
     write_register<dest>(memory_->read(read_register<src>()));
@@ -22,12 +22,13 @@ CPU::ld() -> void
 
 template <AtRegister dest, Register src>
 auto
-CPU::ld() -> void
+CPU::ld() -> void requires Is16BitAtRegister<dest>
 {
     cycles_ += 8;
     memory_->write(read_register<dest>(), read_register<src>());
 }
 
+// write immediate
 template <Register dest>
 auto
 CPU::ld(byte_t src) -> void requires Is8BitRegister<dest>
