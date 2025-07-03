@@ -59,3 +59,39 @@ TEST(LoadInstructionTest, LoadRegisterToAtRegister) {
     ASSERT_EQ(cpu_->get_cycles() - cycles_start, 8);
     ASSERT_EQ(memory_->read(0x9000), 0x12);
 }
+
+TEST(LoadInstructionTest, Load8BitImmediateTo8BitRegister) {
+    auto memory_ = Memory::factory();
+    auto cpu_ = CPU::factory(memory_.get());
+
+    byte_t imm = 0x12;
+
+    uint64_t cycles_start = cpu_->get_cycles();
+    cpu_->ld<Register::D>(imm);
+
+    ASSERT_EQ(cpu_->get_cycles() - cycles_start, 8);
+    ASSERT_EQ(cpu_->read_register<Register::D>(), imm);
+}
+
+TEST(LoadInstructionTest, Load16BitImmediateTo8BitRegister) {
+    auto memory_ = Memory::factory();
+    auto cpu_ = CPU::factory(memory_.get());
+
+    word_t imm = 0x1234;
+
+    uint64_t cycles_start = cpu_->get_cycles();
+    ASSERT_THROW(cpu_->ld<Register::D>(imm), std::domain_error);
+}
+
+TEST(LoadInstructionTest, Load16BitImmediateTo16BitRegister) {
+    auto memory_ = Memory::factory();
+    auto cpu_ = CPU::factory(memory_.get());
+
+    word_t imm = 0x1234;
+
+    uint64_t cycles_start = cpu_->get_cycles();
+    cpu_->ld<Register::BC>(imm);
+
+    ASSERT_EQ(cpu_->get_cycles() - cycles_start, 12);
+    ASSERT_EQ(cpu_->read_register<Register::BC>(), imm);
+}

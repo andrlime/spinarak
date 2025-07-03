@@ -272,7 +272,7 @@ public:
     auto ld() -> void requires Is16BitAtRegister<dest>;
 
     template <Register dest>
-    auto ld(byte_t src) -> void requires Is8BitRegister<dest>;
+    auto ld(word_t src) -> void requires Is8BitRegister<dest>;
 
     template <Register dest>
     auto ld(word_t src) -> void requires Is16BitRegister<dest>;

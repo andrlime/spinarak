@@ -28,11 +28,15 @@ CPU::ld() -> void requires Is16BitAtRegister<dest>
     memory_->write(read_register<dest>(), read_register<src>());
 }
 
-// write immediate
+// write immediate. register is ALWAYS destination here
 template <Register dest>
 auto
-CPU::ld(byte_t src) -> void requires Is8BitRegister<dest>
+CPU::ld(word_t src) -> void requires Is8BitRegister<dest>
 {
+    if (!!(src & 0xFF00)) {
+        throw std::domain_error("attempted to write byte with non-zero upper 8 bits to 8 bit register");
+    }
+    cycles_ += 8;
     write_register<dest>(src);
 }
 
@@ -40,6 +44,7 @@ template <Register dest>
 auto
 CPU::ld(word_t src) -> void requires Is16BitRegister<dest>
 {
+    cycles_ += 12;
     write_register<dest>(src);
 }
 
