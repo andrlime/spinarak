@@ -5,6 +5,7 @@
 #include <memory/memory.hpp>
 #include <types.hpp>
 
+#include <iostream>
 #include <memory>
 
 namespace spinarak {
@@ -88,9 +89,44 @@ public:
         memset(&cpu_contents_, 0, sizeof(cpu_contents_));
     }
 
+    inline auto
+    print_state(std::ostream& os = std::cout) -> void
+    {
+        os << "=== CPU State ===\n";
+        os << "AF: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.af) << "\t";
+        os << "A: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.a) << "\t";
+        os << "F: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.f.f) << "\n";
+
+        os << "BC: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.bc) << "\t";
+        os << "B: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.b) << "\t";
+        os << "C: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.c) << "\n";
+        
+        os << "DE: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.de) << "\t";
+        os << "D: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.d) << "\t";
+        os << "E: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.e) << "\n";
+        
+        os << "HL: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.hl) << "\t";
+        os << "H: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.h) << "\t";
+        os << "L: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.l) << "\n";
+        
+        os << "SP: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.sp) << "\n";        
+        os << "PC: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.pc) << "\n";
+        
+        os << "Flags: "
+        << "[Z:" << +cpu_contents_.f.z
+        << " N:" << +cpu_contents_.f.n
+        << " H:" << +cpu_contents_.f.h
+        << " C:" << +cpu_contents_.f.c
+        << "]\n";
+
+        os << "Cycles: " << std::dec << cycles_ << "\n";
+    }
+
+
     template <Register R>
     inline auto
-    write_register(word_t value) -> void requires Is16BitRegister<R>
+    write_register(word_t value) -> void
+    requires Is16BitRegister<R>
     {
         if constexpr (R == Register::AF) {
             cpu_contents_.af = value;
@@ -122,7 +158,8 @@ public:
 
     template <Register R>
     inline auto
-    write_register(byte_t value) -> void requires Is8BitRegister<R>
+    write_register(byte_t value) -> void
+    requires Is8BitRegister<R>
     {
         if constexpr (R == Register::A) {
             cpu_contents_.a = value;
@@ -162,7 +199,8 @@ public:
 
     template <Register R>
     inline auto
-    read_register() -> word_t requires Is16BitRegister<R>
+    read_register() -> word_t
+    requires Is16BitRegister<R>
     {
         if constexpr (R == Register::AF) {
             return cpu_contents_.af;
@@ -188,7 +226,8 @@ public:
 
     template <AtRegister R>
     inline auto
-    read_register() -> word_t requires Is16BitAtRegister<R>
+    read_register() -> word_t
+    requires Is16BitAtRegister<R>
     {
         if constexpr (R == AtRegister::AtAF) {
             return cpu_contents_.af;
@@ -214,7 +253,8 @@ public:
 
     template <Register R>
     inline auto
-    read_register() -> byte_t requires Is8BitRegister<R>
+    read_register() -> byte_t
+    requires Is8BitRegister<R>
     {
         if constexpr (R == Register::A) {
             return cpu_contents_.a;
@@ -262,24 +302,29 @@ public:
     // Instructions boilerplate starts here
     auto no_op() -> void;
 
+    // ld generic
     template <Register dest, Register src>
     auto ld() -> void;
 
+    // load at
     template <Register dest, AtRegister src>
-    auto ld() -> void requires Is16BitAtRegister<src>;
-
+    auto ld() -> void
+    requires Is16BitAtRegister<src>;
     template <AtRegister dest, Register src>
-    auto ld() -> void requires Is16BitAtRegister<dest>;
+    auto ld() -> void
+    requires Is16BitAtRegister<dest>;
 
+    // immediate
     template <Register dest>
-    auto ld(word_t src) -> void requires Is8BitRegister<dest>;
-
+    auto ld(word_t src) -> void
+    requires Is8BitRegister<dest>;
     template <Register dest>
-    auto ld(word_t src) -> void requires Is16BitRegister<dest>;
+    auto ld(word_t src) -> void
+    requires Is16BitRegister<dest>;
 
+    // load to/from literal address
     template <Register src, WriteDirection direc>
     auto ld(byte_t dest) -> void;
-
     template <Register src, WriteDirection direc>
     auto ld(word_t dest) -> void;
 };

@@ -45,7 +45,9 @@ public:
     auto read_file(std::vector<byte_t>& buffer, std::string path) -> void;
 
     auto read(word_t address) -> byte_t;
-    inline auto read16(word_t address) -> word_t
+
+    inline auto
+    read16(word_t address) -> word_t
     {
         auto top = read(address) << 8;
         auto bottom = read(address + 1);
@@ -54,9 +56,10 @@ public:
 
     // Only writes bytes
     auto write(word_t address, word_t value) -> void;
-    
+
     // Only writes words (16 bits)
-    inline auto write16(word_t address, word_t value) -> void
+    inline auto
+    write16(word_t address, word_t value) -> void
     {
         write(address, (value & 0xFF00) >> 8);
         write(address + 1, (value & 0x00FF));
