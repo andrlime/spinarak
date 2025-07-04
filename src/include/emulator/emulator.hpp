@@ -5,6 +5,9 @@
 #include <memory/memory.hpp>
 #include <types.hpp>
 
+#include <chrono>
+#include <thread>
+
 namespace spinarak {
 namespace emulator {
 
@@ -32,7 +35,11 @@ public:
     inline void
     run()
     {
-        cpu_->tick();
+        // TODO: fix condition
+        while (true) {
+            cpu_->tick();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
     }
 };
 

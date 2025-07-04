@@ -34,7 +34,7 @@ Memory::read_file(std::vector<byte_t>& buffer, std::string path) -> void
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file) {
-        throw std::runtime_error("failed to open file " + path);
+        throw std::runtime_error("failed to open file: " + path);
     }
 
     std::streamsize size = file.tellg();

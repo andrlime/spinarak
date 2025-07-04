@@ -78,9 +78,13 @@ private:
     // vertical order:
     //      B D H AtHL for x0-x7
     //      C E L A for x8-xF
-    static constexpr std::array<AllRegisters, 8> reg_lookup = {
+    static constexpr std::array<AllRegisters, 8> reg8_lookup = {
         Register::B, Register::C, Register::D,      Register::E,
         Register::H, Register::L, AtRegister::AtHL, Register::A
+    };
+
+    static constexpr std::array<AllRegisters, 8> reg16_lookup = {
+        Register::BC, Register::DE, Register::HL, Register::SP
     };
 
 public:
@@ -93,35 +97,45 @@ public:
     print_state(std::ostream& os = std::cout) -> void
     {
         os << "=== CPU State ===\n";
-        os << "AF: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.af) << "\t";
-        os << "A: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.a) << "\t";
-        os << "F: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.f.f) << "\n";
+        os << "AF: 0x" << std::hex << std::setw(4) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.af) << "\t";
+        os << "A: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.a) << "\t";
+        os << "F: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.f.f) << "\n";
 
-        os << "BC: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.bc) << "\t";
-        os << "B: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.b) << "\t";
-        os << "C: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.c) << "\n";
-        
-        os << "DE: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.de) << "\t";
-        os << "D: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.d) << "\t";
-        os << "E: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.e) << "\n";
-        
-        os << "HL: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.hl) << "\t";
-        os << "H: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.h) << "\t";
-        os << "L: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(cpu_contents_.l) << "\n";
-        
-        os << "SP: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.sp) << "\n";        
-        os << "PC: 0x" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(cpu_contents_.pc) << "\n";
-        
+        os << "BC: 0x" << std::hex << std::setw(4) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.bc) << "\t";
+        os << "B: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.b) << "\t";
+        os << "C: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.c) << "\n";
+
+        os << "DE: 0x" << std::hex << std::setw(4) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.de) << "\t";
+        os << "D: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.d) << "\t";
+        os << "E: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.e) << "\n";
+
+        os << "HL: 0x" << std::hex << std::setw(4) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.hl) << "\t";
+        os << "H: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.h) << "\t";
+        os << "L: 0x" << std::hex << std::setw(2) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.l) << "\n";
+
+        os << "SP: 0x" << std::hex << std::setw(4) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.sp) << "\n";
+        os << "PC: 0x" << std::hex << std::setw(4) << std::setfill('0')
+           << static_cast<int>(cpu_contents_.pc) << "\n";
+
         os << "Flags: "
-        << "[Z:" << +cpu_contents_.f.z
-        << " N:" << +cpu_contents_.f.n
-        << " H:" << +cpu_contents_.f.h
-        << " C:" << +cpu_contents_.f.c
-        << "]\n";
+           << "[Z:" << +cpu_contents_.f.z << " N:" << +cpu_contents_.f.n
+           << " H:" << +cpu_contents_.f.h << " C:" << +cpu_contents_.f.c << "]\n";
 
         os << "Cycles: " << std::dec << cycles_ << "\n";
     }
-
 
     template <Register R>
     inline auto
@@ -301,6 +315,7 @@ public:
 
     // Instructions boilerplate starts here
     auto no_op() -> void;
+    auto not_implemented() -> void;
 
     // ld generic
     template <Register dest, Register src>
@@ -334,3 +349,4 @@ public:
 
 #include <cpu/instructions/ld.hpp>
 #include <cpu/instructions/no_op.hpp>
+#include <cpu/instructions/not_implemented.hpp>
