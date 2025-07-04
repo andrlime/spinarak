@@ -10,7 +10,7 @@ CLI* spinarak::cli::CLI::instance_ = nullptr;
 CLI::CLI(int argc, char** argv)
 {
     instance_ = this;
-    
+
     if (argc == 2 && (seq(argv[1], "--help") || seq(argv[1], "-h"))) {
         print_usage();
     }
