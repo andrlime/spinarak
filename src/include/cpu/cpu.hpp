@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cpu/register.hpp>
+#include <cpu/decoder.hpp>
 #include <globals.hpp>
 #include <memory/memory.hpp>
 #include <types.hpp>
@@ -12,6 +13,7 @@ namespace spinarak {
 namespace cpu {
 
 using spinarak::memory::Memory;
+using namespace spinarak::decoder;
 
 union flags_t {
     struct {
@@ -310,8 +312,16 @@ public:
         return std::make_unique<CPU>(memory);
     }
 
-    auto decode_and_execute(byte_t opcode) -> void;
+    // TODO: Write decoder.hpp class and abstract this away
+    // Use friend class
+    auto decode_and_execute(const byte_t opcode) -> void;
     auto tick() -> void;
+
+    // Decoder boilerplate TODO: move to decoder class
+    template <Register R>
+    auto ld16BitImmediate(const byte_t opcode) -> void;
+    template <decoder::Load B>
+    auto ldToAtRegister(const byte_t opcode) -> void;
 
     // Instructions boilerplate starts here
     auto no_op() -> void;
@@ -331,17 +341,17 @@ public:
 
     // immediate
     template <Register dest>
-    auto ld(word_t src) -> void
+    auto ld(const word_t src) -> void
     requires Is8BitRegister<dest>;
     template <Register dest>
-    auto ld(word_t src) -> void
+    auto ld(const word_t src) -> void
     requires Is16BitRegister<dest>;
 
     // load to/from literal address
     template <Register src, WriteDirection direc>
-    auto ld(byte_t dest) -> void;
+    auto ld(const byte_t dest) -> void;
     template <Register src, WriteDirection direc>
-    auto ld(word_t dest) -> void;
+    auto ld(const word_t dest) -> void;
 };
 
 } // namespace cpu

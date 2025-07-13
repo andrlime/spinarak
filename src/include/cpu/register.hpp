@@ -44,5 +44,19 @@ concept Is16BitAtRegister =
 
 using AllRegisters = std::variant<Register, AtRegister>;
 
+enum class LoadDecoderBlock : byte_t {
+    Ld02,
+    Ld12,
+    Ld22,
+    Ld32,
+    Ld70,
+    Ld71,
+    Ld72,
+    Ld73,
+    Ld74,
+    Ld75,
+    Ld77,
+};
+
 } // namespace cpu
 } // namespace spinarak

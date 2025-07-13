@@ -33,7 +33,7 @@ requires Is16BitAtRegister<dest>
 // write immediate. register is ALWAYS destination here
 template <Register dest>
 auto
-CPU::ld(word_t src) -> void
+CPU::ld(const word_t src) -> void
 requires Is8BitRegister<dest>
 {
     if (!!(src & 0xFF00)) {
@@ -47,7 +47,7 @@ requires Is8BitRegister<dest>
 
 template <Register dest>
 auto
-CPU::ld(word_t src) -> void
+CPU::ld(const word_t src) -> void
 requires Is16BitRegister<dest>
 {
     cycles_ += 12;
@@ -58,7 +58,7 @@ requires Is16BitRegister<dest>
 // corresponds to 0xFF00 + address
 template <Register src, WriteDirection direc>
 auto
-CPU::ld(byte_t dest) -> void
+CPU::ld(const byte_t dest) -> void
 {
     cycles_ += 12;
     if constexpr (direc == WriteDirection::DestToSrc) {
@@ -71,7 +71,7 @@ CPU::ld(byte_t dest) -> void
 
 template <Register src, WriteDirection direc>
 auto
-CPU::ld(word_t dest) -> void
+CPU::ld(const word_t dest) -> void
 {
     cycles_ += 16;
     if constexpr (direc == WriteDirection::DestToSrc) {
