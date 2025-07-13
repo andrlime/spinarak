@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cpu/register.hpp>
 #include <cpu/decoder.hpp>
+#include <cpu/register.hpp>
 #include <globals.hpp>
 #include <memory/memory.hpp>
 #include <types.hpp>
@@ -13,7 +13,6 @@ namespace spinarak {
 namespace cpu {
 
 using spinarak::memory::Memory;
-using namespace spinarak::decoder;
 
 union flags_t {
     struct {

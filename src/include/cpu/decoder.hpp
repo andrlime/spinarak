@@ -28,5 +28,5 @@ enum class LoadPlusMinus : byte_t {
     Minus,
 };
 
-} // namespace cpu
+} // namespace decoder
 } // namespace spinarak

@@ -4,7 +4,9 @@ namespace spinarak {
 namespace cpu {
 
 template <Register R>
-auto CPU::ld16BitImmediate(const byte_t opcode) -> void {
+auto
+CPU::ld16BitImmediate(const byte_t opcode) -> void
+{
     const byte_t bottom = memory_->read(cpu_contents_.pc++);
     const byte_t top = memory_->read(cpu_contents_.pc++);
     const word_t word_literal = (top << 8) | bottom;
@@ -12,7 +14,9 @@ auto CPU::ld16BitImmediate(const byte_t opcode) -> void {
 }
 
 template <decoder::Load B>
-auto CPU::ldToAtRegister(const byte_t opcode) -> void {
+auto
+CPU::ldToAtRegister(const byte_t opcode) -> void
+{
     if constexpr (B == decoder::Load::Ld02) {
         constexpr Register source = Register::A;
         constexpr AtRegister destination = AtRegister::AtBC;
@@ -78,23 +82,56 @@ CPU::decode_and_execute(const byte_t opcode) -> void
 {
     DEBUG("running opcode 0x%x\n", opcode);
     switch (opcode) {
-        case 0x00: no_op(); break;
-        case 0x01: ld16BitImmediate<Register::BC>(opcode); break;
-        case 0x11: ld16BitImmediate<Register::DE>(opcode); break;
-        case 0x21: ld16BitImmediate<Register::HL>(opcode); break;
-        case 0x31: ld16BitImmediate<Register::SP>(opcode); break;
-        case 0x02: ldToAtRegister<decoder::Load::Ld02>(opcode); break;
-        case 0x12: ldToAtRegister<decoder::Load::Ld12>(opcode); break;
-        case 0x22: ldToAtRegister<decoder::Load::Ld22>(opcode); break;
-        case 0x32: ldToAtRegister<decoder::Load::Ld32>(opcode); break;
-        case 0x70: ldToAtRegister<decoder::Load::Ld70>(opcode); break;
-        case 0x71: ldToAtRegister<decoder::Load::Ld71>(opcode); break;
-        case 0x72: ldToAtRegister<decoder::Load::Ld72>(opcode); break;
-        case 0x73: ldToAtRegister<decoder::Load::Ld73>(opcode); break;
-        case 0x74: ldToAtRegister<decoder::Load::Ld74>(opcode); break;
-        case 0x75: ldToAtRegister<decoder::Load::Ld75>(opcode); break;
-        case 0x77: ldToAtRegister<decoder::Load::Ld77>(opcode); break;
-        default: throw std::runtime_error("unimplemented opcode");
+        case 0x00:
+            no_op();
+            break;
+        case 0x01:
+            ld16BitImmediate<Register::BC>(opcode);
+            break;
+        case 0x11:
+            ld16BitImmediate<Register::DE>(opcode);
+            break;
+        case 0x21:
+            ld16BitImmediate<Register::HL>(opcode);
+            break;
+        case 0x31:
+            ld16BitImmediate<Register::SP>(opcode);
+            break;
+        case 0x02:
+            ldToAtRegister<decoder::Load::Ld02>(opcode);
+            break;
+        case 0x12:
+            ldToAtRegister<decoder::Load::Ld12>(opcode);
+            break;
+        case 0x22:
+            ldToAtRegister<decoder::Load::Ld22>(opcode);
+            break;
+        case 0x32:
+            ldToAtRegister<decoder::Load::Ld32>(opcode);
+            break;
+        case 0x70:
+            ldToAtRegister<decoder::Load::Ld70>(opcode);
+            break;
+        case 0x71:
+            ldToAtRegister<decoder::Load::Ld71>(opcode);
+            break;
+        case 0x72:
+            ldToAtRegister<decoder::Load::Ld72>(opcode);
+            break;
+        case 0x73:
+            ldToAtRegister<decoder::Load::Ld73>(opcode);
+            break;
+        case 0x74:
+            ldToAtRegister<decoder::Load::Ld74>(opcode);
+            break;
+        case 0x75:
+            ldToAtRegister<decoder::Load::Ld75>(opcode);
+            break;
+        case 0x77:
+            ldToAtRegister<decoder::Load::Ld77>(opcode);
+            break;
+        default:
+            throw std::runtime_error("unimplemented opcode");
     }
 }
 
